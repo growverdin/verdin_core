@@ -1,0 +1,8 @@
+{
+	"name": "verdin_core",
+	"version": "0.0.1",
+	"devDependencies": {
+		"noble": "1.3.0",
+		"unirest": "0.4.2"
+	}
+}
