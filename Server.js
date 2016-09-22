@@ -1,6 +1,6 @@
 var unirest = require('unirest');
 
-function Server() {
+var Server = function() {
 	this.url = "http://verdin.ddns.net";
 }
 
@@ -8,7 +8,7 @@ Server.prototype.getLinkedSensors = function(callback) {
 	unirest.get(this.url + "/getLinkedSensors")
 	.end(function(response) {
 		if (response.ok) {
-			callback(JSON.parse(response.body));
+			callback(response.body);
 		} else {
 			console.log("\n*** Error trying to get linked sensors form the Server! ***");
 		}

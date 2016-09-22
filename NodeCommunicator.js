@@ -12,6 +12,10 @@ NodeCommunicator.prototype.addMessage = function(message) {
 
 //REVIEW THIS
 NodeCommunicator.prototype.communicate = function(callback) {
+/*
+	ALWAYS REMEMBER: JUST 5 SIMULTANEOUS CONNECTIONS
+*/
+
 	//noble scan blablabla.......
 
 	//for each response

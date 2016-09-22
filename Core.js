@@ -1,19 +1,28 @@
 var Server = require('./Server');
 var NodeCommunicator = require('./NodeCommunicator');
+var MessageParser = require('./MessageParser');
+
+//initialize Server
+var server = new Server();
+
+//initialize NodeCommunicator
+var nodeCommunicator = new NodeCommunicator();
 
 //start with a measurement
 var isMeasurement = true;
 
 var executeMeasurements = function() {
-	Server.getLinkedSensors(function(linkedSensors) {
-		//CONTINUE HERE...
+	server.getLinkedSensors(function(linkedSensors) {
+		//parses list of linked sensors in array of messageObj format
+		var messageList = MessageParser.parseLinkedSensorsToMessageObjArray(linkedSensors);
+
+		//adds each message to be sent
+		for (message in messageList) {
+			nodeCommunicator.addMessage(message);
+		}
 
 		//REVIEW THIS
-		//for each message
-		NodeCommunicator.addMessage(message);
-
-		//REVIEW THIS
-		NodeCommunicator.communicate(Server.addMeasurement(measurement));
+		nodeCommunicator.communicate(Server.addMeasurement(measurement));
 	});
 };
 
@@ -37,4 +46,4 @@ var execution = function() {
 };
 
 //executes every 5 minutes
-setInterval(execution, 300000);
+setInterval(execution, 3000);
