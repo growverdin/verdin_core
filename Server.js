@@ -16,11 +16,14 @@ Server.prototype.getLinkedSensors = function(callback) {
 };
 
 //REVIEW THIS
-Server.prototype.addMeasurement = function(measurement) {
+Server.prototype.addMeasurement = function(measurementObj) {
+
+	console.log("\nMOCK: Sending this measurement to the cloud:\n" + measurementObj);
+
 
 	//TRATAR MEASUREMENT PARA JSON
 	//measurement = ........
-
+	/*
 	unirest.post(this.url + "/addMeasurement")
 	.headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
 	.send(measurement)
@@ -31,6 +34,7 @@ Server.prototype.addMeasurement = function(measurement) {
 			console.log("\n*** Error trying to send measurement to the Server! ***");
 		}
 	});
+	*/
 };
 
 module.exports = Server;

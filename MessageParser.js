@@ -4,6 +4,7 @@ function MessageObj() {
 	this.deviceMacAddress = "";
 	this.messageString = "";
 	this.linkedSensorsPerDevice = new Array();
+	this.responsesPerDevice = new Array();
 }
 
 MessageParser.parseLinkedSensorsToMessageObjArray = function(linkedSensors) {
