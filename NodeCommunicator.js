@@ -68,9 +68,9 @@ NodeCommunicator.prototype.communicateToDevice = function(device, listIndex) {
 
 				//sends signal to start communicating
 				this.writeToCharacteristic(theCharacteristic, "startingMessage");
-			}
-		}
-	}
+			});
+		});
+	});
 };
 
 NodeCommunicator.prototype.writeToCharacteristic = function(theCharacteristic, message) {
@@ -78,7 +78,7 @@ NodeCommunicator.prototype.writeToCharacteristic = function(theCharacteristic, m
 };
 
 NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, message, listIndex) {
-	console.log("\nMOCK: Received message from node:"\n + message);
+	console.log("\nMOCK: Received message from node:\n" + message);
 
 	var messageObj = communicatingList[listIndex];
 
