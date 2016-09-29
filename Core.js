@@ -8,6 +8,9 @@ var server = new Server();
 //initialize NodeCommunicator
 var nodeCommunicator = new NodeCommunicator();
 
+//initialize MessageParser
+var messageParser = new MessageParser();
+
 //start with a measurement
 var isMeasurement = true;
 
@@ -17,11 +20,11 @@ var executeMeasurements = function() {
 		//if has linked sensors
 		if (linkedSensors.length > 0) {
 			//parses list of linked sensors in array of messageObj format
-			var messageList = MessageParser.parseLinkedSensorsToMessageObjArray(linkedSensors);
+			var messageList = messageParser.parseLinkedSensorsToMessageObjArray(linkedSensors);
 
 			//adds each message to be sent
 			for (message in messageList) {
-				nodeCommunicator.addMessage(message);
+				nodeCommunicator.addMessage(messageList[message]);
 			}
 
 			//communicates to the nodes and wait for the results
@@ -64,4 +67,4 @@ var execution = function() {
 };
 
 //executes every 5 minutes
-setInterval(execution, 3000);
+setInterval(execution, 15000);

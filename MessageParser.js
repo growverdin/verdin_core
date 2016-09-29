@@ -1,13 +1,17 @@
-function MessageParser() {}
+var MessageParser = function() {
 
-function MessageObj() {
+	console.log("\nMessageParser Initialized.");
+
+};
+
+var MessageObj = function() {
 	this.deviceMacAddress = "";
 	this.messageString = "";
 	this.linkedSensorsPerDevice = new Array();
 	this.responsesPerDevice = new Array();
-}
+};
 
-MessageParser.parseLinkedSensorsToMessageObjArray = function(linkedSensors) {
+MessageParser.prototype.parseLinkedSensorsToMessageObjArray = function(linkedSensors) {
 	var messageArray = new Array();
 	var messageObj = new MessageObj();
 	var tempSensorType;
@@ -16,6 +20,7 @@ MessageParser.parseLinkedSensorsToMessageObjArray = function(linkedSensors) {
 		if (messageObj.deviceMacAddress != linkedSensors[i].device.macAddress) {
 			//if finds a new device, adds the previous message
 			if (i != 0) {
+				messageObj.messageString += "/*";
 				messageArray.push(messageObj);
 			}
 
@@ -29,13 +34,13 @@ MessageParser.parseLinkedSensorsToMessageObjArray = function(linkedSensors) {
 		messageObj.linkedSensorsPerDevice.push(linkedSensors[i]);
 
 		//adds the type of the sensor
-		if (typeOfSensor != linkedSensors[i].senAct.id) {
+		if (tempSensorType != linkedSensors[i].senAct.id) {
 			//adds separator if finds a new type of sensor
-			if (typeOfSensor != "") {
+			if (tempSensorType != "") {
 				messageObj.messageString += "/";
 			}
-			typeOfSensor = linkedSensors[i].senAct.id;
-			messageObj.messageString += typeOfSensor;
+			tempSensorType = linkedSensors[i].senAct.id;
+			messageObj.messageString += tempSensorType;
 		}
 
 		//adds the port of the sensor
@@ -43,9 +48,12 @@ MessageParser.parseLinkedSensorsToMessageObjArray = function(linkedSensors) {
 
 		//if it's the last one, adds the message
 		if (i == linkedSensors.length -1) {
+			messageObj.messageString += "/*";
 			messageArray.push(messageObj);
 		}
 	}
 
 	return messageArray;
 };
+
+module.exports = MessageParser;
