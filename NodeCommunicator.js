@@ -95,13 +95,14 @@ NodeCommunicator.prototype.communicateToDevice = function(device, listIndex) {
 
 NodeCommunicator.prototype.writeToCharacteristic = function(theCharacteristic, message) {
 
-	console.log("\nWrote message to node:\n" + message);
+	console.log("\nWrote message to node " + theCharacteristic._peripheralId + ":\n" + message);
 
 	theCharacteristic.write(new Buffer(message, "binary"), true, function(error) {});
 };
 
 NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, message, listIndex, device) {
-	console.log("\nRead message from node:\n" + message);
+	
+	console.log("\nRead message from node " + theCharacteristic._peripheralId + ":\n" + message);
 
 	var messageObj = this.messageList[listIndex];
 
