@@ -3,11 +3,11 @@ var NodeCommunicator = require('./NodeCommunicator');
 var MessageParser = require('./MessageParser');
 
 //define execution interval
-var execInterval = 15000;
+var execInterval = 20000;
 
 //define NodeCommunicator timeouts
 var scanTimeout = 2000;
-var communicationTimeout = 10000;
+var communicationTimeout = 15000;
 
 //initialize Server
 var server = new Server();

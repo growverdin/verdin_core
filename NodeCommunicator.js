@@ -2,7 +2,6 @@ var noble = require('noble');
 
 //REVIEW THIS
 var NodeCommunicator = function(scanTimeout, communicationTimeout) {
-
 	console.log("\nNodeCommunicator Initialized.");
 
 	this.scanTimeout = scanTimeout;
@@ -86,7 +85,7 @@ NodeCommunicator.prototype.onDiscoverDevice = function(device) {
 };
 
 NodeCommunicator.prototype.communicateToScannedDevices = function() {
-	
+	//BLE handles max 5 simultaneous connections
 	while ((this.communicatingCount < 5) && (this.scannedDevices.length > 0)) {
 		this.communicatingCount++;
 		var scannedDevice = this.scannedDevices.shift();
@@ -170,7 +169,8 @@ NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, 
 				//set initial status for dynamic variables
         			this.initialStatus(); 
                 	} else {
-				this.communcatingCount--;
+				//communicate with one more device
+				this.communicatingCount--;
 				this.communicateToScannedDevices();
 			}
 		}.bind(this));
