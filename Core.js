@@ -2,11 +2,18 @@ var Server = require('./Server');
 var NodeCommunicator = require('./NodeCommunicator');
 var MessageParser = require('./MessageParser');
 
+//define execution interval
+var execInterval = 15000;
+
+//define NodeCommunicator timeouts
+var scanTimeout = 2000;
+var communicationTimeout = 10000;
+
 //initialize Server
 var server = new Server();
 
 //initialize NodeCommunicator
-var nodeCommunicator = new NodeCommunicator();
+var nodeCommunicator = new NodeCommunicator(scanTimeout, communicationTimeout);
 
 //initialize MessageParser
 var messageParser = new MessageParser();
@@ -67,4 +74,4 @@ var execution = function() {
 };
 
 //executes every 5 minutes
-setInterval(execution, 15000);
+setInterval(execution, execInterval);
