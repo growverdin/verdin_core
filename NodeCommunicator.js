@@ -34,7 +34,7 @@ NodeCommunicator.prototype.communicate = function(callback) {
 
 		this.isBusy = true;
 		this.callback = callback;
-		noble.startScanning();
+		noble.startScanning(['ffe0'], true);
 
 		console.log("\nStarted scanning for BLE devices.");
 
@@ -47,7 +47,7 @@ NodeCommunicator.prototype.onDiscoverDevice = function(device) {
 	//checks if peripheral is in messageList
 	for (var i = 0 ; i < this.messageList.length ; i++) {
 		//found device to communicate
-		if (this.messageList[i].deviceMacAddress.toUpperCase() === device.address.toUpperCase()) {
+		if ((this.messageList[i].status === "pending") && (this.messageList[i].deviceMacAddress.toUpperCase() === device.address.toUpperCase())) {
 
 			console.log("\nFound linked device: " + device.address.toUpperCase());
 
@@ -63,7 +63,7 @@ NodeCommunicator.prototype.onDiscoverDevice = function(device) {
 			}
 
 			//communicates to the device found
-			this.communicateToDevice(device, this.messageList.length -1);
+			this.communicateToDevice(device, i);
 			break;
 		}
 	}
@@ -72,8 +72,15 @@ NodeCommunicator.prototype.onDiscoverDevice = function(device) {
 NodeCommunicator.prototype.communicateToDevice = function(device, listIndex) {
 	//connects to peripheral
 	device.connect(function(error) {
-
 		console.log("\nConnected to linked device: " + device.address.toUpperCase());
+
+		//if is there any pending message, restart scanning BLE
+		if (this.existsMessageWithStatus("pending")) {
+
+			console.log("\nRestarted scanning for BLE devices.");
+			
+			noble.startScanning(['ffe0'], true);
+		}
 
 		device.discoverServices(['ffe0'], function(error, services) {
 			services[0].discoverCharacteristics(['ffe1'], function(error, characteristics) {
@@ -113,26 +120,27 @@ NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, 
 
 		this.writeToCharacteristic(theCharacteristic, messageToSend);
 	} else if (message === "endOfMessage") {
-		//ends the communication of the messageObj and calls its callback
+		//disconnects from node
 		device.disconnect(function(error) {
 
 			//HERE IS THE POINT TO GET MORE CONNECTIONS FROM THE WAITING POOL
 
 			console.log("\nDisconnected from linked device: " + device.address.toUpperCase());
 
-		});
-		messageObj.status = "done";
-		this.callback(messageObj);
-
-		//resets the NodeCommunicator to initial status
-		if (!this.existsMessageWithStatus("pending") && !this.existsMessageWithStatus("communicating")) {
-
-			console.log("\nNodeCommunicator is has finished communicating and not busy anymore.");
-
-			this.messageList = new Array();
-			this.isBusy = false;
-			this.callback = function() {};
-		}
+			//ends the communication of the messageObj and calls its callback
+			messageObj.status = "done";
+                	this.callback(messageObj);
+                
+                	//resets the NodeCommunicator to initial status
+                	if (!this.existsMessageWithStatus("pending") && !this.existsMessageWithStatus("communicating")) {
+                
+                        	console.log("\nNodeCommunicator is has finished communicating and not busy anymore.");
+                        
+                        	this.messageList = new Array();
+                        	this.isBusy = false;
+                        	this.callback = function() {};
+                	}
+		}.bind(this));
 	} else {
 		//adds node response to messageObj
 		messageObj.responsesPerDevice.push(message);

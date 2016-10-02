@@ -24,7 +24,8 @@ Server.prototype.getLinkedSensors = function(callback) {
 //REVIEW THIS
 Server.prototype.addMeasurement = function(measurementObj) {
 
-	console.log("\nMOCK: Sending this measurement to the cloud:\n" + JSON.stringify(measurementObj));
+	console.log("\nMOCK: Sending this measurement to the cloud:\n");
+	console.log(measurementObj.linkedSensor.device.macAddress + ": " + measurementObj.value);
 
 
 	//TRATAR MEASUREMENT PARA JSON
