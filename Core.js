@@ -34,7 +34,7 @@ var executeMeasurements = function() {
 				nodeCommunicator.addMessage(messageList[message]);
 			}
 
-			//communicates to the nodes and wait for the results
+			//start communication and adds callback to be executed on response of each node
 			nodeCommunicator.communicate(function(messageObj) {
 				for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
 					//pair each linked sensor with its measurement value

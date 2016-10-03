@@ -27,13 +27,27 @@ Server.prototype.addMeasurement = function(measurementObj) {
 	console.log("\nMOCK: Sending this measurement to the cloud:\n");
 	console.log(measurementObj.linkedSensor.device.macAddress + ": " + measurementObj.value);
 
-
-	//TRATAR MEASUREMENT PARA JSON
-	//measurement = ........
 	/*
+	var date = Date.now();
+	var params = "?linkedSensor=" + JSON.stringify(measurementObj.linkedSensor) + "&value=" + measurementObj.value + "&date=" + date;
+	params = encodeURIComponent(params);
+
+	console.log("\n" + this.url + "/addMeasurement" + params);
+
+	unirest.get(this.url + "/addMeasurement" + params)
+        .end(function(response) {
+        	if (response.ok) {
+                        console.log("\nMeasurement sent to the Server.");
+                } else {
+                        console.log("\n*** Error trying to send measurement to the Server! ***");
+                }
+	});
+	*/
+
+		
 	unirest.post(this.url + "/addMeasurement")
 	.headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-	.send(measurement)
+	.send(measurementObj)
 	.end(function(response) {
 		if (response.ok) {
 			console.log("\nMeasurement sent to the Server.");
@@ -41,7 +55,7 @@ Server.prototype.addMeasurement = function(measurementObj) {
 			console.log("\n*** Error trying to send measurement to the Server! ***");
 		}
 	});
-	*/
+	
 };
 
 module.exports = Server;

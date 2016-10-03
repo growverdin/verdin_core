@@ -203,6 +203,7 @@ NodeCommunicator.prototype.scanTimeouted = function() {
         	this.initialStatus();
 	} else {
 		//communicate to scanned devices
+		this.communicationTimeoutId = setTimeout(this.communicationTimeouted.bind(this), this.communicationTimeout);
 		this.communicateToScannedDevices();
 	}
 };
