@@ -18,9 +18,20 @@ var NodeCommunicator = function(scanTimeout, communicationTimeout) {
 };
 
 NodeCommunicator.prototype.initialStatus = function() {
+	for (var i in this.communicatingDevices) {
+		console.log("\nFORCE DISCONNECTED FROM DEVICE:\n" + this.communicatingDevices[i].device.address.toUpperCase());
+		
+		this.communicatingDevices[i].device.disconnect(function(error) {
+			console.log("\nForced disconnected from linked device: " + this.communicatingDevices[i].device.address.toUpperCase());
+
+			
+		}.bind(this));
+	}
+
 	this.messageList = new Array();
         this.scannedDevices = new Array();
-        this.scanTimeoutId = undefined;
+        this.communicatingDevices = new Array();
+	this.scanTimeoutId = undefined;
         this.communicationTimeoutId = undefined;
         this.isBusy = false;
         this.communicatingCount = 0;
@@ -89,6 +100,7 @@ NodeCommunicator.prototype.communicateToScannedDevices = function() {
 	while ((this.communicatingCount < 5) && (this.scannedDevices.length > 0)) {
 		this.communicatingCount++;
 		var scannedDevice = this.scannedDevices.shift();
+		this.communicatingDevices.push(scannedDevice);
 		this.communicateToDevice(scannedDevice.device, scannedDevice.listIndex);
 	}
 };
