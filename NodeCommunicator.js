@@ -72,6 +72,11 @@ NodeCommunicator.prototype.initialStatus = function() {
 
 		console.log("NodeCommunicator returned to initial status.");
 	}
+
+	//console.log(noble._bindings._hci);
+	//noble._bindings._hci.reset();
+	noble._bindings._hci.emit('stateChange', 'poweredOff');
+	noble._bindings._hci.emit('stateChange', 'poweredOn');
 };
 
 NodeCommunicator.prototype.addMessage = function(messageObj) {
@@ -170,6 +175,9 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 						}
 					}.bind(this));
         			} else {
+
+					console.log("\nService of linked device: " + currentDevice.device.address.toUpperCase());
+
 					services[0].discoverCharacteristics(['ffe1'], function(error, characteristics) {
 						if (error) {
 							console.log("\nError trying to discover characteristics of device: " + currentDevice.device.address.toUpperCase());
@@ -187,6 +195,9 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 								}
 							}.bind(this));
         					} else {
+
+							console.log("\nCharacteristic of linked device: " + currentDevice.device.address.toUpperCase());
+
 							//gets the characteristic used to communicate
 							var theCharacteristic = characteristics[0];
 
@@ -214,8 +225,6 @@ NodeCommunicator.prototype.writeToCharacteristic = function(theCharacteristic, m
 };
 
 NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, message, currentDevice) {
-
-	console.log("\nCURRENT DEVICE: " + currentDevice.device);
 	
 	console.log("\nRead message from node " + theCharacteristic._peripheralId + ": " + message);
 
