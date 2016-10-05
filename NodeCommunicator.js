@@ -26,8 +26,6 @@ NodeCommunicator.prototype.initialStatus = function() {
 			this.messageList[devicesToRemove[i].listIndex].status = "timeout";
 			var popedDevice = this.popFromCommunicatingDevices(devicesToRemove[i]);
 
-			console.log("\nPOPED DEVICE: " + popedDevice.device);
-
 			if (popedDevice.device.state === "connected") {
 				popedDevice.device.disconnect(function(error) {
 
@@ -72,11 +70,6 @@ NodeCommunicator.prototype.initialStatus = function() {
 
 		console.log("NodeCommunicator returned to initial status.");
 	}
-
-	//console.log(noble._bindings._hci);
-	//noble._bindings._hci.reset();
-	noble._bindings._hci.emit('stateChange', 'poweredOff');
-	noble._bindings._hci.emit('stateChange', 'poweredOn');
 };
 
 NodeCommunicator.prototype.addMessage = function(messageObj) {
@@ -84,7 +77,7 @@ NodeCommunicator.prototype.addMessage = function(messageObj) {
 	messageObj.status = "pending";
 	this.messageList.push(messageObj);
 
-	console.log("\nAdded message:\n" + JSON.stringify(messageObj));
+	//console.log("\nAdded message:\n" + JSON.stringify(messageObj));
 };
 
 NodeCommunicator.prototype.communicate = function(callback) {
@@ -176,7 +169,7 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 					}.bind(this));
         			} else {
 
-					console.log("\nService of linked device: " + currentDevice.device.address.toUpperCase());
+					console.log("\nService of linked device: ".underline.red + currentDevice.device.address.toUpperCase());
 
 					services[0].discoverCharacteristics(['ffe1'], function(error, characteristics) {
 						if (error) {
@@ -310,7 +303,7 @@ NodeCommunicator.prototype.scanTimeouted = function() {
 };
 
 NodeCommunicator.prototype.communicationTimeouted = function() {
-	console.log("\nCommunication took too long. (Timeout)");
+	console.log("\nCommunication took too long. (Timeout)".underline.blue);
 
 	//set initial status for dynamic variables
 	this.initialStatus();
