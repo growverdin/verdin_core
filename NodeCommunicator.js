@@ -9,6 +9,9 @@ var NodeCommunicator = function(scanTimeout, communicationTimeout) {
 
 	//set initial status for dynamic variables
 	this.initialStatus();
+
+	//set unlimited listeners
+	noble.setMaxListeners(0);
 	
 	noble.on('stateChange', function(state) {
 		console.log("\n*** Bluetooth Low Energy has changed to state: " + state + " ***");
@@ -114,6 +117,9 @@ NodeCommunicator.prototype.communicate = function(callback) {
 };
 
 NodeCommunicator.prototype.onDiscoverDevice = function(device) {
+	//set unlimited listeners
+        device.setMaxListeners(0);
+
 	//checks if peripheral is in messageList
 	for (var i = 0 ; i < this.messageList.length ; i++) {
 		//found device to communicate
@@ -185,6 +191,9 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 
 					console.log("\nService of linked device: ".underline.red + currentDevice.device.address.toUpperCase());
 
+					//set unlimited listeners
+        				services[0].setMaxListeners(0);
+
 					services[0].discoverCharacteristics(['ffe1'], function(error, characteristics) {
 						if (error) {
 							console.log("\nError trying to discover characteristics of device: " + currentDevice.device.address.toUpperCase());
@@ -207,6 +216,9 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 
 							//gets the characteristic used to communicate
 							var theCharacteristic = characteristics[0];
+
+							//set unlimited listeners
+                                                        theCharacteristic.setMaxListeners(0);
 
 							//sets receiver function
 							theCharacteristic.on('read', function(data, isNotification) {
