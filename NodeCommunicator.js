@@ -70,6 +70,20 @@ NodeCommunicator.prototype.initialStatus = function() {
 
 		console.log("NodeCommunicator returned to initial status.");
 	}
+
+	//clear all listeners for not calling any lost callback
+	for (var uuid in noble._peripherals) {
+		noble._peripherals[uuid].removeAllListeners('servicesDiscover');
+	
+		for (var uuidS in noble._peripherals[uuid].services) {
+			noble._peripherals[uuid].services[uuidS].removeAllListeners('characteristicsDiscover');
+
+			for (var uuidC in noble._peripherals[uuid].services[uuidS].characteristics) {
+				noble._peripherals[uuid].services[uuidS].characteristics[uuidC].removeAllListeners('read');
+				noble._peripherals[uuid].services[uuidS].characteristics[uuidC].removeAllListeners('write');
+			}
+		}
+	}
 };
 
 NodeCommunicator.prototype.addMessage = function(messageObj) {
