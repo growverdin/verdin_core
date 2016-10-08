@@ -12,7 +12,10 @@ var NodeCommunicator = function(scanTimeout, communicationTimeout) {
 
 	//set unlimited listeners
 	noble.setMaxListeners(0);
-	
+	noble._bindings.setMaxListeners(0);	
+	noble._bindings._hci.setMaxListeners(0);	
+	noble._bindings._gap.setMaxListeners(0);
+
 	noble.on('stateChange', function(state) {
 		console.log("\n*** Bluetooth Low Energy has changed to state: " + state + " ***");
 	});

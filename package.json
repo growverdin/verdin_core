@@ -2,7 +2,7 @@
 	"name": "verdin_core",
 	"version": "0.0.1",
 	"devDependencies": {
-		"noble": "1.7.0",
+		"noble": "git@github.com:growverdin/noble",
 		"unirest": "0.4.2"
 	}
 }
