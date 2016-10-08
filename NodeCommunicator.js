@@ -60,7 +60,7 @@ NodeCommunicator.prototype.initialStatus = function() {
 					this.communicationTimeoutId = undefined;
 					this.isBusy = false;
 					this.callback = function() {};
-			    
+					
 					console.log("NodeCommunicator returned to initial status.");
 				}			
 			}
@@ -80,7 +80,7 @@ NodeCommunicator.prototype.initialStatus = function() {
 	//clear all listeners for not calling any lost callback
 	for (var uuid in noble._peripherals) {
 		noble._peripherals[uuid].removeAllListeners('servicesDiscover');
-	
+		
 		for (var uuidS in noble._peripherals[uuid].services) {
 			noble._peripherals[uuid].services[uuidS].removeAllListeners('characteristicsDiscover');
 
@@ -103,7 +103,7 @@ NodeCommunicator.prototype.addMessage = function(messageObj) {
 NodeCommunicator.prototype.communicate = function(callback) {
 /*
 	ALWAYS REMEMBER: JUST 5 SIMULTANEOUS CONNECTIONS
-*/
+	*/
 	if (noble.state === "poweredOn") {
 		console.log("\nNodeCommunicator is now communicating and busy.");
 
@@ -121,7 +121,7 @@ NodeCommunicator.prototype.communicate = function(callback) {
 
 NodeCommunicator.prototype.onDiscoverDevice = function(device) {
 	//set unlimited listeners
-        device.setMaxListeners(0);
+	device.setMaxListeners(0);
 
 	//checks if peripheral is in messageList
 	for (var i = 0 ; i < this.messageList.length ; i++) {
@@ -190,12 +190,12 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 							this.communicateToScannedDevices();
 						}
 					}.bind(this));
-        			} else {
+				} else {
 
 					console.log("\nService of linked device: ".underline.red + currentDevice.device.address.toUpperCase());
 
 					//set unlimited listeners
-        				services[0].setMaxListeners(0);
+					services[0].setMaxListeners(0);
 
 					services[0].discoverCharacteristics(['ffe1'], function(error, characteristics) {
 						if (error) {
@@ -203,17 +203,17 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 
 							currentDevice.device.disconnect(function(error) {
 								if (error) {
-                                                        		console.log("\nError trying to disconnected from linked device: " + currentDevice.device.address.toUpperCase());
-                                                		} else {
+									console.log("\nError trying to disconnected from linked device: " + currentDevice.device.address.toUpperCase());
+								} else {
 									console.log("\nDisconnected from linked device: " + currentDevice.device.address.toUpperCase());
-								
+									
 									this.messageList[currentDevice.listIndex].status = "error";
-                                                        		this.popFromCommunicatingDevices(currentDevice);
-								
+									this.popFromCommunicatingDevices(currentDevice);
+									
 									this.communicateToScannedDevices();
 								}
 							}.bind(this));
-        					} else {
+						} else {
 
 							console.log("\nCharacteristic of linked device: " + currentDevice.device.address.toUpperCase());
 
@@ -221,7 +221,7 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 							var theCharacteristic = characteristics[0];
 
 							//set unlimited listeners
-                                                        theCharacteristic.setMaxListeners(0);
+							theCharacteristic.setMaxListeners(0);
 
 							//sets receiver function
 							theCharacteristic.on('read', function(data, isNotification) {
@@ -233,10 +233,10 @@ NodeCommunicator.prototype.communicateToDevice = function(currentDevice) {
 							this.writeToCharacteristic(theCharacteristic, "startingMessage");
 						}
 					}.bind(this));
-				}
-			}.bind(this));
-		}
-	}.bind(this));
+}
+}.bind(this));
+}
+}.bind(this));
 };
 
 NodeCommunicator.prototype.writeToCharacteristic = function(theCharacteristic, message) {
@@ -275,9 +275,9 @@ NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, 
 			if ((this.scannedDevices.length === 0) && (this.communicatingDevices.length === 0)) {
 				//clear communication timeout			
 				clearTimeout(this.communicationTimeoutId);
-		
+				
 				console.log("\nNodeCommunicator has finished communicating.");
-		       
+				
 				//set initial status for dynamic variables
 				this.initialStatus(); 
 			} else {
@@ -323,7 +323,7 @@ NodeCommunicator.prototype.scanTimeouted = function() {
 		console.log("\nNodeCommunicator didn't find any of the linked devices.");
 
 		//set initial status for dynamic variables
-        	this.initialStatus();
+		this.initialStatus();
 	} else {
 		//communicate to scanned devices
 		this.communicationTimeoutId = setTimeout(this.communicationTimeouted.bind(this), this.communicationTimeout);
