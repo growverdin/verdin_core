@@ -143,7 +143,7 @@ NodeCommunicator.prototype.onDiscoverDevice = function(device) {
 
 NodeCommunicator.prototype.communicateToScannedDevices = function() {
 	//BLE handles max 5 simultaneous connections
-	while ((this.communicatingDevices.length < 5) && (this.scannedDevices.length > 0)) {
+	while ((this.communicatingDevices.length < 1) && (this.scannedDevices.length > 0)) {
 		var currentDevice = this.scannedDevices.shift();
 		this.messageList[currentDevice.listIndex].status = "communicating";
 		this.communicatingDevices.push(currentDevice);
