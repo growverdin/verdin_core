@@ -2,7 +2,7 @@
 	"name": "verdin_core",
 	"version": "0.0.1",
 	"devDependencies": {
-		"noble": "git@github.com:growverdin/noble",
+		"noble": "git@github.com:growverdin/noble.git#fix-listeners",
 		"unirest": "0.4.2"
 	}
 }
