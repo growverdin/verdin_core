@@ -21,7 +21,6 @@ Server.prototype.getLinkedSensors = function(callback) {
 	});
 };
 
-//REVIEW THIS
 Server.prototype.addMeasurement = function(measurementObj) {
 
 	console.log("\nSending this measurement to the cloud: " + measurementObj.linkedSensor.device.macAddress + " " + measurementObj.value);
@@ -34,6 +33,20 @@ Server.prototype.addMeasurement = function(measurementObj) {
 			console.log("\nMeasurement sent to the Server.");
 		} else {
 			console.log("\n*** Error trying to send measurement to the Server! ***");
+		}
+	});
+};
+
+Server.prototype.getLinkedActuatorsActions = function(callback) {
+	unirest.get(this.url + "/getLinkedActuatorsActions")
+	.end(function(response) {
+		if (response.ok) {
+
+			console.log("\nGot linked actuators actions from the Cloud.");
+
+			callback(response.body);
+		} else {
+			console.log("\n*** Error trying to get linked actuators actions from the Cloud! ***");
 		}
 	});
 };

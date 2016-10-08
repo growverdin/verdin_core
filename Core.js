@@ -38,10 +38,10 @@ var executeMeasurements = function() {
 
 			//start communication and adds callback to be executed on response of each node
 			nodeCommunicator.communicate(function(messageObj) {
-				for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
+				for (var i = 0 ; i < messageObj.linkedSenActPerDevice.length ; i++) {
 					//pair each linked sensor with its measurement value
 					var measurementObj = {
-						linkedSensor: messageObj.linkedSensorsPerDevice[i],
+						linkedSensor: messageObj.linkedSenActPerDevice[i],
 						value: messageObj.responsesPerDevice[i]
 					};
 
@@ -54,38 +54,37 @@ var executeMeasurements = function() {
 };
 
 var executeActions = function() {
-
-	// TO BE DONE NOW..........
-
-	/*
 	//gets list of actions to be executed from the cloud
-        server.getLinkedSensors(function(linkedSensors) {
+	server.getLinkedActuatorsActions(function(linkedActuatorsActions) {
 		//if has linked sensors
-                if (linkedSensors.length > 0) {
-                        //parses list of linked sensors in array of messageObj format
-                        var messageList = messageParser.parseLinkedSensorsToMessageObjArray(linkedSensors);
+		if (linkedActuatorsActions.length > 0) {
+            //parses list of linked sensors in array of messageObj format
+            var messageList = messageParser.parseLinkedActuatorsActionsToMessageObjArray(linkedActuatorsActions);
 
-                        //adds each message to be sent
-                        for (message in messageList) {
-                                nodeCommunicator.addMessage(messageList[message]);
-                        }
+            //adds each message to be sent
+            for (message in messageList) {
+            	nodeCommunicator.addMessage(messageList[message]);
+            }
 
-                        //start communication and adds callback to be executed on response of each node
-                        nodeCommunicator.communicate(function(messageObj) {
-                                for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
-                                        //pair each linked sensor with its measurement value
-                                        var measurementObj = {
-                                                linkedSensor: messageObj.linkedSensorsPerDevice[i],
-                                                value: messageObj.responsesPerDevice[i]
-                                        };
+            //start communication and adds callback to be executed on response of each node
+            nodeCommunicator.communicate(function(messageObj) {
+        		//*** SEE IF ITS GOING TO ADD ANYTHING FOR ACTION COMPLETED ***
+        		/*
+                for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
+                        //pair each linked sensor with its measurement value
+                        var measurementObj = {
+                                linkedSensor: messageObj.linkedSensorsPerDevice[i],
+                                value: messageObj.responsesPerDevice[i]
+                        };
 
-                                        //sends each of the measurements to the cloud
-                                        server.addMeasurement(measurementObj);
-                                }
-                        });
+                        //sends each of the measurements to the cloud
+                        server.addMeasurement(measurementObj);
                 }
-	});
-*/
+                */
+            });
+        }
+    });
+
 };
 
 var execution = function() {
