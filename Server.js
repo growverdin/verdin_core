@@ -51,4 +51,20 @@ Server.prototype.getLinkedActuatorsActions = function(callback) {
 	});
 };
 
+Server.prototype.addActuation = function(actuationObj) {
+
+	console.log("\nSending this actuation to the cloud: " + actuationObj.linkedActuator.device.macAddress + " " + actuationObj.value);
+
+	unirest.post(this.url + "/addActuation")
+	.headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+	.send(actuationObj)
+	.end(function(response) {
+		if (response.ok) {
+			console.log("\nActuation sent to the Server.");
+		} else {
+			console.log("\n*** Error trying to send actuation to the Server! ***");
+		}
+	});
+};
+
 module.exports = Server;

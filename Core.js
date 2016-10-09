@@ -69,23 +69,19 @@ var executeActions = function() {
 
             //start communication and adds callback to be executed on response of each node
             nodeCommunicator.communicate(function(messageObj) {
-        		//*** SEE IF ITS GOING TO ADD ANYTHING FOR ACTION COMPLETED ***
-        		/*
-                for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
-                        //pair each linked sensor with its measurement value
-                        var measurementObj = {
-                                linkedSensor: messageObj.linkedSensorsPerDevice[i],
-                                value: messageObj.responsesPerDevice[i]
-                        };
+                for (var i = 0 ; i < messageObj.linkedSenActPerDevice.length ; i++) {
+                    //pair each linked actuator with its actuation value
+                    var actuationObj = {
+                        linkedActuator: messageObj.linkedSenActPerDevice[i],
+                        value: messageObj.responsesPerDevice[i]
+                    };
 
-                        //sends each of the measurements to the cloud
-                        server.addMeasurement(measurementObj);
+                    //sends each of the actuations to the cloud
+                    server.addActuation(actuationObj);
                 }
-                */
             });
         }
     });
-
 };
 
 var execution = function() {
