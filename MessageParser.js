@@ -95,7 +95,7 @@ MessageParser.prototype.parseLinkedActuatorsActionsToMessageObjArray = function(
 		messageObj.messageString += "?" + linkedActuatorsActions[i].value;
 
 		//if it's the last one, adds the message
-		if (i == linkedSensors.length -1) {
+		if (i == linkedActuatorsActions.length -1) {
 			messageObj.messageString += "/*";
 			messageArray.push(messageObj);
 		}
