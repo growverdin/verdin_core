@@ -265,6 +265,11 @@ NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, 
 
 		this.writeToCharacteristic(theCharacteristic, messageToSend);
 	} else if (message === "endOfMessage") {
+		//mark as done and calls its callback
+		messageObj.status = "done";
+		this.callback(messageObj);
+
+		//disconnect from node
 		currentDevice.device.disconnect(function(error) {
 			if (error) {
 				console.log("\nError trying to disconnected from linked device: " + currentDevice.device.address.toUpperCase());
@@ -273,9 +278,6 @@ NodeCommunicator.prototype.readFromCharacteristic = function(theCharacteristic, 
 
 				this.popFromCommunicatingDevices(currentDevice);
 			}
-
-			messageObj.status = "done";
-			this.callback(messageObj);
 
 			//if there is no more scanned and communicating devices, resets the NodeCommunicator to initial status
 			if ((this.scannedDevices.length === 0) && (this.communicatingDevices.length === 0)) {
