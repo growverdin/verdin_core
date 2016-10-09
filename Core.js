@@ -8,14 +8,15 @@ var MessageParser = require('./MessageParser');
 var execInterval = 20000;//300000;
 
 //define NodeCommunicator timeouts
-var scanTimeout = 3000;
+var scanTimeout = 2000;
+var connectAndDiscoverTimeout = 2000;
 var communicationTimeout = 15000;//240000;
 
 //initialize Server
 var server = new Server();
 
 //initialize NodeCommunicator
-var nodeCommunicator = new NodeCommunicator(scanTimeout, communicationTimeout);
+var nodeCommunicator = new NodeCommunicator(scanTimeout, connectAndDiscoverTimeout, communicationTimeout);
 
 //initialize MessageParser
 var messageParser = new MessageParser();
