@@ -150,47 +150,7 @@ NodeCommunicator.prototype.communicateToScannedDevices = function() {
 		this.communicatingDevices.push(currentDevice);
 
 		//set connect and discover timeout
-		var connectAndDiscoverTimeoutId = setTimeout(function() {
-			console.log("\nConnect and Discover took too long. (Timeout)");
-
-			if (currentDevice.device.state === "connected") {
-				currentDevice.device.disconnect(function(error) {
-
-					console.log("\nDisconnected from linked device: " + currentDevice.device.address.toUpperCase());
-
-					//clean all peripheral listeners
-					noble._peripherals[currentDevice.device.uuid].removeAllListeners('servicesDiscover');
-					for (var uuidS in noble._peripherals[currentDevice.device.uuid].services) {
-						noble._peripherals[currentDevice.device.uuid].services[uuidS].removeAllListeners('characteristicsDiscover');
-
-						for (var uuidC in noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics) {
-							noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('read');
-							noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('write');
-						}
-					}
-
-					//tries to connect a second time
-					console.log("\nLet's try to connect to " + currentDevice.device.address.toUpperCase() + " one more time.");
-					this.communicateToDevice(currentDevice);
-				}.bind(this));
-			} else {
-				//clean all peripheral listeners
-				noble._peripherals[currentDevice.device.uuid].removeAllListeners('servicesDiscover');
-				for (var uuidS in noble._peripherals[currentDevice.device.uuid].services) {
-					noble._peripherals[currentDevice.device.uuid].services[uuidS].removeAllListeners('characteristicsDiscover');
-
-					for (var uuidC in noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics) {
-						noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('read');
-						noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('write');
-					}
-				}
-
-				//tries to connect a second time
-				console.log("\nLet's try to connect to " + currentDevice.device.address.toUpperCase() + " one more time.");
-				this.communicateToDevice(currentDevice);
-			}
-
-		}.bind(this), this.connectAndDiscoverTimeout);
+		var connectAndDiscoverTimeoutId = setTimeout(this.connectAndDiscoverTimeouted.bind(this), this.connectAndDiscoverTimeout, currentDevice);
 
 		this.communicateToDevice(currentDevice, connectAndDiscoverTimeoutId);
 	}
@@ -382,6 +342,48 @@ NodeCommunicator.prototype.communicationTimeouted = function() {
 
 	//set initial status for dynamic variables
 	this.initialStatus();
+};
+
+NodeCommunicator.prototype.connectAndDiscoverTimeouted = function(currentDevice) {
+	console.log("\nConnect and Discover of " + currentDevice.device.address.toUpperCase() + " took too long. (Timeout)");
+
+	if (currentDevice.device.state === "connected") {
+		currentDevice.device.disconnect(function(error) {
+
+			console.log("\nDisconnected by Timeout from linked device: " + currentDevice.device.address.toUpperCase());
+
+			//clean all peripheral listeners
+			noble._peripherals[currentDevice.device.uuid].removeAllListeners('servicesDiscover');
+			for (var uuidS in noble._peripherals[currentDevice.device.uuid].services) {
+				noble._peripherals[currentDevice.device.uuid].services[uuidS].removeAllListeners('characteristicsDiscover');
+
+				for (var uuidC in noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics) {
+					noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('read');
+					noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('write');
+				}
+			}
+
+			//tries to connect a second time
+			console.log("\nLet's try to connect to " + currentDevice.device.address.toUpperCase() + " one more time.");
+			this.communicateToDevice(currentDevice);
+		}.bind(this));
+	} else {
+		//clean all peripheral listeners
+		noble._peripherals[currentDevice.device.uuid].removeAllListeners('servicesDiscover');
+		for (var uuidS in noble._peripherals[currentDevice.device.uuid].services) {
+			noble._peripherals[currentDevice.device.uuid].services[uuidS].removeAllListeners('characteristicsDiscover');
+
+			for (var uuidC in noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics) {
+				noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('read');
+				noble._peripherals[currentDevice.device.uuid].services[uuidS].characteristics[uuidC].removeAllListeners('write');
+			}
+		}
+
+		//tries to connect a second time
+		console.log("\nLet's try to connect to " + currentDevice.device.address.toUpperCase() + " one more time.");
+		this.communicateToDevice(currentDevice);
+	}
+
 };
 
 module.exports = NodeCommunicator;
