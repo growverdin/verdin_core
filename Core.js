@@ -8,14 +8,15 @@ var MessageParser = require('./MessageParser');
 var execInterval = 20000;//300000;
 
 //define NodeCommunicator timeouts
-var scanTimeout = 3000;
+var scanTimeout = 2000;
+var connectAndDiscoverTimeout = 2000;
 var communicationTimeout = 15000;//240000;
 
 //initialize Server
 var server = new Server();
 
 //initialize NodeCommunicator
-var nodeCommunicator = new NodeCommunicator(scanTimeout, communicationTimeout);
+var nodeCommunicator = new NodeCommunicator(scanTimeout, connectAndDiscoverTimeout, communicationTimeout);
 
 //initialize MessageParser
 var messageParser = new MessageParser();
@@ -38,10 +39,10 @@ var executeMeasurements = function() {
 
 			//start communication and adds callback to be executed on response of each node
 			nodeCommunicator.communicate(function(messageObj) {
-				for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
+				for (var i = 0 ; i < messageObj.linkedSenActPerDevice.length ; i++) {
 					//pair each linked sensor with its measurement value
 					var measurementObj = {
-						linkedSensor: messageObj.linkedSensorsPerDevice[i],
+						linkedSensor: messageObj.linkedSenActPerDevice[i],
 						value: messageObj.responsesPerDevice[i]
 					};
 
@@ -54,38 +55,33 @@ var executeMeasurements = function() {
 };
 
 var executeActions = function() {
-
-	// TO BE DONE NOW..........
-
-	/*
 	//gets list of actions to be executed from the cloud
-        server.getLinkedSensors(function(linkedSensors) {
+	server.getLinkedActuatorsActions(function(linkedActuatorsActions) {
 		//if has linked sensors
-                if (linkedSensors.length > 0) {
-                        //parses list of linked sensors in array of messageObj format
-                        var messageList = messageParser.parseLinkedSensorsToMessageObjArray(linkedSensors);
+		if (linkedActuatorsActions.length > 0) {
+            //parses list of linked sensors in array of messageObj format
+            var messageList = messageParser.parseLinkedActuatorsActionsToMessageObjArray(linkedActuatorsActions);
 
-                        //adds each message to be sent
-                        for (message in messageList) {
-                                nodeCommunicator.addMessage(messageList[message]);
-                        }
+            //adds each message to be sent
+            for (message in messageList) {
+            	nodeCommunicator.addMessage(messageList[message]);
+            }
 
-                        //start communication and adds callback to be executed on response of each node
-                        nodeCommunicator.communicate(function(messageObj) {
-                                for (var i = 0 ; i < messageObj.linkedSensorsPerDevice.length ; i++) {
-                                        //pair each linked sensor with its measurement value
-                                        var measurementObj = {
-                                                linkedSensor: messageObj.linkedSensorsPerDevice[i],
-                                                value: messageObj.responsesPerDevice[i]
-                                        };
+            //start communication and adds callback to be executed on response of each node
+            nodeCommunicator.communicate(function(messageObj) {
+                for (var i = 0 ; i < messageObj.linkedSenActPerDevice.length ; i++) {
+                    //pair each linked actuator with its actuation value
+                    var actuationObj = {
+                        linkedActuator: messageObj.linkedSenActPerDevice[i],
+                        value: messageObj.responsesPerDevice[i]
+                    };
 
-                                        //sends each of the measurements to the cloud
-                                        server.addMeasurement(measurementObj);
-                                }
-                        });
+                    //sends each of the actuations to the cloud
+                    server.addActuation(actuationObj);
                 }
-	});
-	*/
+            });
+        }
+    });
 };
 
 var execution = function() {
