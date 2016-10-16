@@ -74,6 +74,13 @@ NodeCommunicator.prototype.initialStatus = function() {
 
 	//clear all listeners for not calling any lost callback
 	for (var uuid in noble._peripherals) {
+		//disconnects from any device still connected
+		if (noble._peripherals[uuid].state === "connected") {
+                	noble._peripherals[uuid].disconnect(function(error) {
+				console.log("\nDisconnected from still connected linked device: " + noble._peripherals[uuid].address.toUpperCase());			
+			});
+		}
+
 		noble._peripherals[uuid].removeAllListeners('servicesDiscover');
 
 		for (var uuidS in noble._peripherals[uuid].services) {
