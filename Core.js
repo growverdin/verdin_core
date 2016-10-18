@@ -1,3 +1,5 @@
+var execCount = 0;
+
 var colors = require('colors');
 
 var Server = require('./Server');
@@ -85,6 +87,13 @@ var executeActions = function() {
 };
 
 var execution = function() {
+	execCount++;
+
+	if (execCount > 2) {
+		console.log("Restarting!!!");
+		console.log(restart);
+	}
+
 	//just start another execution if the previous has finished
 	if (!nodeCommunicator.isBusy) {
 		//measurement turn
